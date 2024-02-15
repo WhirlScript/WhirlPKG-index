@@ -4,9 +4,9 @@ name: "update"
 on:
     push:
         branches:
-            - "test"
-    #schedule:
-    #  - cron: 0 0,4,8,12,16,20 * * *
+            - "master"
+    schedule:
+      - cron: 0 0,4,8,12,16,20 * * *
 jobs:
     runscript:
         runs-on: ubuntu-latest
@@ -17,10 +17,7 @@ jobs:
               uses: actions/checkout@v4
 
             - name: "yarn add"
-              run: pwd && ls -a && yarn
+              run: yarn
 
             - name: "update"
               run: npx ts-node ./src/index.ts
-
-            - name: "show ssh key"
-              run: echo $ssh_key
