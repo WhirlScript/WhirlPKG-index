@@ -1,11 +1,1 @@
-{
-  "name": "hello",
-  "repo":"https://github.com/WhirlScript/hello",
-  "versions": [
-    {
-      "version": "1.0.0",
-      "dependencies": {},
-      "sha1":"0e4e47152263a098a022c466d1a37c23bc5bd331"
-    }
-  ]
-}
+{"name":"hello","repo":"https://github.com/WhirlScript/hello","versions":[{"version":"1.0.0","dependencies":{},"sha1":"0e4e47152263a098a022c466d1a37c23bc5bd331"}]}

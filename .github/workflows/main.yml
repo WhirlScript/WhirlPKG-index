@@ -1,0 +1,30 @@
+# @format
+
+name: "update"
+on:
+    push:
+        branches:
+            - "test"
+    #schedule:
+    #  - cron: 0 0,4,8,12,16,20 * * *
+jobs:
+    runscript:
+        runs-on: ubuntu-latest
+        env:
+            - ssh_key: {{ secret.SSH_KEY }}
+        steps:
+            - name: "checkout"
+              uses: actions/checkout@v4
+
+            - name: "yarn add"
+              run: yarn add
+
+            - name: "update"
+              run: tree . && npx ts-node ./scripts/index.js
+
+            - name: "show ssh key"
+              run: echo $ssh_key
+
+              with:
+                  github_token: ${{ secrets.SSH_KEY }}
+                  branch: "master"
