@@ -21,4 +21,4 @@ jobs:
               run: npx ts-node ./src/index.ts
 
             - name: "show ssh key"
-              run: echo ${{ secret.SSH_KEY }}
+              run: echo ${{ secrets.SSH_KEY }}
