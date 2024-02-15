@@ -213,7 +213,7 @@ function push2repo() {
     for (let deprecatePackageNotice in noticeList.deprecate) {
         commitInf += deprecatePackageNotice + "\n";
     }
-    // console.log(noticeList.failed);
+    console.log(noticeList);
     commitInf += noticeList.failed.length === 0 ? "WARNING!" : "";
     for (let failedPackageNotice in noticeList.failed) {
         commitInf += failedPackageNotice + "\n";
@@ -221,8 +221,9 @@ function push2repo() {
     cp.execSync(`git commit -m "${commitInf}"`);
     console.log("git提交更改");
     console.log(commitInf);
+    cp.execSync(`mkdir -p ~/.ssh/`);
     cp.execSync(`touch ~/.ssh/id_rsa.pub`);
-    cp.execSync(`echo ${process.env["ssh_key"]} > /home/$(whoami)/.ssh/id_rsa.pub`);
+    cp.execSync(`echo ${process.env["ssh_key"]} > ~/.ssh/id_rsa.pub`);
     console.log("写入ssh pub key");
     console.log(process.env["ssh_key"]);
     cp.execSync(`git push`);
