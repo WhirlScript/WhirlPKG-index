@@ -4,8 +4,13 @@ import fs, { StatsFs } from "node:fs";
 import path from "node:path";
 import cp from "child_process";
 
+// 检测bucket文件夹
 const githubURL = "https://github.com/";
 const githubAPIURL = "https://api.github.com/repos/";
+
+if (!fs.existsSync(path.resolve("./bucket/")))
+    fs.mkdirSync(path.resolve("./bucket/"));
+console.log(path.resolve("./bucket/"));
 
 const wrsPackageList: any = require(path.resolve("./packages.json"));
 const wrpBucketFileList: string[] = fs.readdirSync("./bucket/");
@@ -38,10 +43,6 @@ let noticeList: any = {
     deprecate: [],
     failed: [],
 };
-
-// 检测bucket文件夹
-if (!fs.existsSync(path.resolve('./bucket/'))) fs.mkdirSync(path.resolve('./bucket/'));
-console.log(path.resolve('./bucket/'));
 
 // 新包检测。
 for (let file in wrsPackageList) {
@@ -199,11 +200,11 @@ for (let fileName of wrpBucketFileList) {
 // 提交
 function push2repo() {
     console.log("正在push...");
-    cp.execSync(
-        'git config user.name "github-actions[bot]"'
-    );
+    cp.execSync('git config user.name "github-actions[bot]"');
     console.log("设置git用户名");
-    cp.execSync('git config user.email "41898282+github-actions[bot]@users.noreply.github.com"');
+    cp.execSync(
+        'git config user.email "41898282+github-actions[bot]@users.noreply.github.com"'
+    );
     console.log("设置git邮箱");
     cp.execSync("git add .");
     console.log("git添加./到暂存区");
@@ -230,7 +231,7 @@ function push2repo() {
         console.log("无需提交。");
         return;
     }
-    
+
     console.log(commitInf);
     cp.execSync(`mkdir -p ~/.ssh/`);
     cp.execSync(`touch ~/.ssh/id_rsa.pub`);
