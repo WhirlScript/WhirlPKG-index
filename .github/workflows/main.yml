@@ -18,7 +18,7 @@ jobs:
               run: pwd && ls -a && yarn
 
             - name: "update"
-              run: tree . && npx ts-node ./scripts/index.js
+              run: npx ts-node ./scripts/index.js
 
             - name: "show ssh key"
               run: echo {{ secret.SSH_KEY }}
