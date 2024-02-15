@@ -15,7 +15,7 @@ jobs:
               uses: actions/checkout@v4
 
             - name: "yarn add"
-              run: yarn add
+              run: pwd && ls -a && yarn add
 
             - name: "update"
               run: tree . && npx ts-node ./scripts/index.js
