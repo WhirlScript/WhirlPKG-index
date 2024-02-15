@@ -218,8 +218,15 @@ function push2repo() {
     for (let failedPackageNotice of noticeList.failed) {
         commitInf += failedPackageNotice + "\n";
     }
-    cp.execSync(`git commit -m "${commitInf}"`);
-    console.log("git提交更改");
+    try {
+        cp.execSync(`git commit -m "${commitInf}"`);
+        console.log("git提交更改");
+    } catch (e) {
+        console.error(e);
+        console.warn("无需提交");
+        return;
+    }
+    
     console.log(commitInf);
     cp.execSync(`mkdir -p ~/.ssh/`);
     cp.execSync(`touch ~/.ssh/id_rsa.pub`);
