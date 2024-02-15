@@ -211,7 +211,7 @@ function push2repo() {
     for (let deprecatePackageNotice in noticeList.deprecate) {
         commitInf += deprecatePackageNotice + "\n";
     }
-    console.log(noticeList.failed);
+    // console.log(noticeList.failed);
     commitInf += noticeList.failed.length === 0 ? "WARNING!" : "";
     for (let failedPackageNotice in noticeList.failed) {
         commitInf += failedPackageNotice + "\n";
