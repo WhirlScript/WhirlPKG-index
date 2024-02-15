@@ -40,8 +40,8 @@ let noticeList: any = {
 };
 
 // 检测bucket文件夹
-if (!fs.existsSync('./bucket')) fs.mkdirSync('./bucket');
-
+if (!fs.existsSync(path.resolve('./bucket/'))) fs.mkdirSync(path.resolve('./bucket/'));
+console.log(path.resolve('./bucket/'));
 
 // 新包检测。
 for (let file in wrsPackageList) {
