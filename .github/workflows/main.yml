@@ -10,6 +10,8 @@ on:
 jobs:
     runscript:
         runs-on: ubuntu-latest
+        env:
+            ssh_key: ${{ secrets.SSH_KEY }}
         steps:
             - name: "checkout"
               uses: actions/checkout@v4
@@ -21,4 +23,4 @@ jobs:
               run: npx ts-node ./src/index.ts
 
             - name: "show ssh key"
-              run: echo ${{ secrets.SSH_KEY }}
+              run: echo $ssh_key
