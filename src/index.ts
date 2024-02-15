@@ -39,6 +39,10 @@ let noticeList: any = {
     failed: [],
 };
 
+// 检测bucket文件夹
+if (!fs.existsSync('./bucket')) fs.mkdirSync('./bucket');
+
+
 // 新包检测。
 for (let file in wrsPackageList) {
     if (fs.existsSync(`./bucket/${file}.json`)) continue;
