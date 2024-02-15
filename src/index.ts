@@ -208,20 +208,20 @@ function push2repo() {
     console.log("设置git邮箱");
     cp.execSync("git add .");
     console.log("git添加./到暂存区");
-    let commitInf = "Update packages.\\n";
+    let commitInf = "Update packages.\n";
     for (let newPackageNotice of noticeList.new) {
-        commitInf += newPackageNotice + "\\n";
+        commitInf += newPackageNotice + "\n";
     }
     for (let updatePackageNotice of noticeList.update) {
-        commitInf += updatePackageNotice + "\\n";
+        commitInf += updatePackageNotice + "\n";
     }
     for (let deprecatePackageNotice of noticeList.deprecate) {
-        commitInf += deprecatePackageNotice + "\\n";
+        commitInf += deprecatePackageNotice + "\n";
     }
     console.log(noticeList);
     commitInf += noticeList.failed.length === 0 ? "WARNING!" : "";
     for (let failedPackageNotice of noticeList.failed) {
-        commitInf += failedPackageNotice + "\\n";
+        commitInf += failedPackageNotice + "\n";
     }
     try {
         cp.execSync(`git commit -m "${commitInf}"`);
