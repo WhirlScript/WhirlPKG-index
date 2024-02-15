@@ -24,7 +24,3 @@ jobs:
 
             - name: "show ssh key"
               run: echo $ssh_key
-
-              with:
-                  github_token: ${{ secrets.SSH_KEY }}
-                  branch: "master"
