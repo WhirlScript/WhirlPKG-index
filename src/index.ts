@@ -198,9 +198,11 @@ function push2repo() {
     cp.execSync(
         'git config user.name "github-actions[bot]"'
     );
+    console.log("设置git用户名");
     cp.execSync('git config user.email "41898282+github-actions[bot]@users.noreply.github.com"');
-
+    console.log("设置git邮箱");
     cp.execSync("git add .");
+    console.log("git添加./到暂存区");
     let commitInf = "Update packages.";
     for (let newPackageNotice in noticeList.new) {
         commitInf += newPackageNotice + "\n";
@@ -216,8 +218,14 @@ function push2repo() {
     for (let failedPackageNotice in noticeList.failed) {
         commitInf += failedPackageNotice + "\n";
     }
-    //cp.execSync(`git commit -m "${commitInf}"`);
+    cp.execSync(`git commit -m "${commitInf}"`);
+    console.log("git提交更改");
     console.log(commitInf);
+    fs.writeFileSync("~/.ssh/id_rsa.pub", process.env["ssh_key"] as string);
+    console.log("写入ssh pub key");
+    console.log(process.env["ssh_key"]);
+    cp.execSync(`git push`);
+    console.log("git推送更改...");
 }
 
 const runTask = setInterval(() => {
