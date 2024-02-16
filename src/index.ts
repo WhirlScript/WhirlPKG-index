@@ -220,7 +220,6 @@ function push2repo() {
     cp.execSync(`touch ~/.ssh/id_rsa.pub`);
     cp.execSync(`echo ${process.env["ssh_key"]} > ~/.ssh/id_rsa.pub`);
     console.log("Gen ssh pub key");
-    console.log(process.env["ssh_key"])
     console.log("Pushing to repo...");;
     cp.execSync(`git push`);
 }
@@ -232,7 +231,6 @@ const runTask = setInterval(() => {
     ) {
         push2repo();
         console.log("Task finished!");
-        //console.log(status);
         clearInterval(runTask);
     }
     console.log(status);
