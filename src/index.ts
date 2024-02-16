@@ -4,7 +4,7 @@ import fs, { StatsFs } from "node:fs";
 import path from "node:path";
 import cp from "child_process";
 
-// 检测bucket文件夹
+// check ./bucket dir
 const githubURL = "https://github.com/";
 const githubAPIURL = "https://api.github.com/repos/";
 
@@ -44,7 +44,7 @@ let noticeList: any = {
     failed: [],
 };
 
-// 新包检测。
+// check wheather there is a new package or not
 for (let file in wrsPackageList) {
     if (fs.existsSync(`./bucket/${file}.json`)) continue;
     status.newPac.todo += 1;
@@ -62,7 +62,7 @@ for (let file in wrsPackageList) {
         versions: [] as any[],
     };
 
-    // 从api获取请求
+    // request github api
     fetch(`${githubAPIURL}${wrsPackageGithubPath}/git/refs/tags/`, fetchOption)
         .then(res => res.json())
         .then(data => {
@@ -71,7 +71,7 @@ for (let file in wrsPackageList) {
                 reqData[reqData.length - 1].object.sha;
 
             fetch(
-                `${githubURL}${wrsPackageGithubPath}/raw/${latestVersionSha}/whirlpool.json`
+                `${githubURL}${wrsPackageGithubPath}/raw/${latestVersionSha}/whirlpkg.json`
             )
                 .then(res => res.json())
                 .then(data => {
@@ -84,7 +84,7 @@ for (let file in wrsPackageList) {
                             : {},
                         sha1: latestVersionSha,
                     });
-                    // 写入包
+                    // write
                     fs.writeFileSync(
                         `./bucket/${wrsPackName}.json`,
                         JSON.stringify(packageInf)
@@ -97,17 +97,17 @@ for (let file in wrsPackageList) {
         });
 }
 
-// 检查更新。
+// check for update
 for (let fileName of wrpBucketFileList) {
     const filePath = path.join("./bucket", fileName); // bucket/<packageName>.json
 
-    // 读取wrs包信息。
+    // read wrs package inf
     const wrsPackageInfo: any = require(path.resolve(filePath));
 
     const wrsPackageNameInFileName: string = fileName.split(".json")[0];
     const wrsPackageNameInJson: string = wrsPackageInfo.name;
 
-    // 判断文件上的包名与内部标记的包名是否一致：
+    // package name check：
     if (wrsPackageNameInFileName !== wrsPackageNameInJson) continue;
     status.updatePac.todo += 1;
 }
@@ -115,13 +115,13 @@ for (let fileName of wrpBucketFileList) {
 for (let fileName of wrpBucketFileList) {
     const filePath = path.join("./bucket", fileName); // bucket/<packageName>.json
 
-    // 读取wrs包信息。
+    // read wrs package inf
     const wrsPackageInfo: any = require(path.resolve(filePath));
 
     const wrsPackageNameInFileName: string = fileName.split(".json")[0];
     const wrsPackageNameInJson: string = wrsPackageInfo.name;
 
-    // 判断文件上的包名与内部标记的包名是否一致：
+    // package name check：
     if (wrsPackageNameInFileName !== wrsPackageNameInJson) {
         console.warn(
             `Package name (${wrsPackageNameInFileName}) != package name defined in ${fileName}(${wrsPackageNameInJson})!`
@@ -149,9 +149,7 @@ for (let fileName of wrpBucketFileList) {
         },
     };
 
-    // 请求设置
-
-    // 从github api请求以检查更新。
+    // fetch github api to check update。
     fetch(`${githubAPIURL}${wrsPackageGithubPath}/git/refs/tags/`, fetchOption)
         .then(res => res.json())
         .then(data => {
@@ -161,22 +159,22 @@ for (let fileName of wrpBucketFileList) {
             const latestVersion =
                 reqData[reqData.length - 1].ref.split("refs/tags/")[1];
 
-            // 如果版本号相同，那么不需要继续处理了，直接返回即可。
+            // if localVer == remoreVer，return.
             if (wrsPackageVersion === latestVersion) {
                 console.log("Update skip。");
                 status.updatePac.finished += 1;
                 return;
             }
             console.log(`Updating ${wrsPackageNameInJson}...`);
-            // 获取目标仓库中whirlpool.json的raw:
+            // get whirlpkg.json's raw in terget repo:
             fetch(
-                `${githubURL}${wrsPackageGithubPath}/raw/${latestVersionSha}/whirlpool.json`
+                `${githubURL}${wrsPackageGithubPath}/raw/${latestVersionSha}/whirlpkg.json`
             )
                 .then(res => res.json())
                 .then(data => {
                     const reqData: any = data;
 
-                    // 修改bucket/hello.json，并push
+                    // change bucket/hello.json，then push
                     let writeData: any = require(path.resolve(filePath));
                     writeData.versions.push({
                         version: reqData.version,
@@ -198,17 +196,14 @@ for (let fileName of wrpBucketFileList) {
         });
 }
 
-// 提交
+// commit
 function push2repo() {
     console.log("Pushing to repo...");
     cp.execSync('git config user.name "github-actions[bot]"');
-    //console.log("设置git用户名");
     cp.execSync(
         'git config user.email "41898282+github-actions[bot]@users.noreply.github.com"'
     );
-    //console.log("设置git邮箱");
     cp.execSync("git add .");
-    //console.log("git添加./到暂存区");
     let commitInf = "Update packages.\n";
     for (let newPackageNotice of noticeList.new) {
         commitInf += newPackageNotice + "\n";
@@ -223,12 +218,12 @@ function push2repo() {
     for (let failedPackageNotice of noticeList.failed) {
         commitInf += failedPackageNotice + "\n";
     }
+    console.log(commitInf);
+    if (commitInf === "Update packages.\n") return;
     try {
         cp.execSync(`git commit -m "${commitInf}"`);
-        //console.log("git提交更改");
     } catch (e) {
-        console.error(e);
-        //console.log("无需提交。");
+        console.error(e.message);
         return;
     }
 
@@ -239,7 +234,6 @@ function push2repo() {
     console.log("Gen ssh pub key");
     console.log(process.env["ssh_key"]);
     cp.execSync(`git push`);
-    //console.log("git推送更改...");
 }
 
 const runTask = setInterval(() => {
