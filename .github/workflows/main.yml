@@ -16,8 +16,8 @@ jobs:
             - name: "checkout"
               uses: actions/checkout@v4
 
-            - name: "yarn add"
-              run: yarn
+            - name: "npm"
+              run: npm i -g typescript @types/node ts-node
 
             - name: "update"
               run: npx ts-node ./src/index.ts
