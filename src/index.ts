@@ -231,7 +231,7 @@ const runTask = setInterval(() => {
         status.updatePac.todo <= status.updatePac.finished
     ) {
         push2repo();
-        console.log("Task finished！");
+        console.log("Task finished!");
         //console.log(status);
         clearInterval(runTask);
     }
