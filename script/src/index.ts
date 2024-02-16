@@ -108,7 +108,7 @@ let commitDetails = "";
                 });
 
                 console.log(`${messageHead} add ${tag.version}`);
-                commitDetails += `:sparkles: ${messageHead} add ${tag.version}`;
+                commitDetails += `:sparkles: ${messageHead} add ${tag.version}\n`;
             }
 
             for (const oldVersionListElement of oldVersionList) {
@@ -136,7 +136,7 @@ let commitDetails = "";
     }
 
     // commit
-    const commitInf = "[skip ci] Update packages.\n\n" + commitDetails;
+    const commitInf = "Update packages.\n\n" + commitDetails;
     cp.execSync("git config user.name \"github-actions[bot]\"", {
         cwd: path.resolve("../")
     });

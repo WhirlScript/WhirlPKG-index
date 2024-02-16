@@ -1,16 +1,1 @@
-{
-  "name": "hello",
-  "repo": "https://github.com/WhirlScript/hello",
-  "versions": [
-    {
-      "version": "1.0.1",
-      "dependencies": {},
-      "sha1": "ecb96fc983dd6ae016388ce4737ee9bd56dc74f6"
-    },
-    {
-      "version": "1.0.0",
-      "dependencies": {},
-      "sha1": "0e4e47152263a098a022c466d1a37c23bc5bd331"
-    }
-  ]
-}
+{"name":"hello","repo":"https://github.com/WhirlScript/hello","versions":[{"dependencies":{},"sha":"d238d177e9d212eac3a09a03c9c123e5f7ef12d7","version":"1.0.2"},{"version":"1.0.1","dependencies":{},"sha1":"ecb96fc983dd6ae016388ce4737ee9bd56dc74f6","status":"deprecated"},{"version":"1.0.0","dependencies":{},"sha1":"0e4e47152263a098a022c466d1a37c23bc5bd331","status":"deprecated"}]}
