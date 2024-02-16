@@ -44,7 +44,7 @@ let noticeList: any = {
     failed: [],
 };
 
-// check wheather there is a new package or not
+// check whether there is a new package or not
 for (let file in wrsPackageList) {
     if (fs.existsSync(`./bucket/${file}.json`)) continue;
     status.newPac.todo += 1;
@@ -139,15 +139,6 @@ for (let fileName of wrpBucketFileList) {
     console.log(
         `Checking update for wrs package ${wrsPackageNameInJson}(${wrsPackageVersion})...`
     );
-    const requestOption: any = {
-        hostname: "api.github.com",
-        path: `/repos/${wrsPackageGithubPath}/git/refs/tags/`,
-        headers: {
-            Accept: "application/vnd.github+json",
-            "X-GitHub-Api-Version": "2022-11-28",
-            "User-Agent": "Whirlpkg-Index",
-        },
-    };
 
     // fetch github api to check update。
     fetch(`${githubAPIURL}${wrsPackageGithubPath}/git/refs/tags/`, fetchOption)
@@ -166,7 +157,7 @@ for (let fileName of wrpBucketFileList) {
                 return;
             }
             console.log(`Updating ${wrsPackageNameInJson}...`);
-            // get whirlpkg.json's raw in terget repo:
+            // get whirlpkg.json's raw in target repo:
             fetch(
                 `${githubURL}${wrsPackageGithubPath}/raw/${latestVersionSha}/whirlpkg.json`
             )
@@ -217,7 +208,6 @@ function push2repo() {
     for (let failedPackageNotice of noticeList.failed) {
         commitInf += failedPackageNotice + "\n";
     }
-    //console.log(commitInf);
     if (commitInf === "Update packages.\n") return;
     try {
         cp.execSync(`git commit -m "${commitInf}"`);
@@ -226,7 +216,6 @@ function push2repo() {
         return;
     }
 
-    //console.log(commitInf);
     cp.execSync(`mkdir -p ~/.ssh/`);
     cp.execSync(`touch ~/.ssh/id_rsa.pub`);
     cp.execSync(`echo ${process.env["ssh_key"]} > ~/.ssh/id_rsa.pub`);
