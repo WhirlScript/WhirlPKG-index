@@ -16,6 +16,6 @@ export declare type WhirlBucket = {
         version: string,
         dependencies: { [key: string]: string },
         sha: string,
-        status?: "deprecated"
+        status?: "deprecated" | "preview"
     }[],
 }

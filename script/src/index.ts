@@ -112,7 +112,7 @@ let commitDetails = "";
             }
 
             for (const oldVersionListElement of oldVersionList) {
-                if (tasks.deprecateVersion.indexOf(oldVersionListElement.version)) {
+                if (tasks.deprecateVersion.indexOf(oldVersionListElement.version) >= 0) {
                     oldVersionListElement.status = "deprecated";
                     console.log(`${messageHead} deprecated ${oldVersionListElement.version}`);
                     commitDetails += `:wastebasket: ${messageHead} deprecated ${oldVersionListElement.version}\n`;
@@ -136,7 +136,7 @@ let commitDetails = "";
     }
 
     // commit
-    const commitInf = "Update packages.\n\n" + commitDetails;
+    const commitInf = "[skip ci] Update packages.\n\n" + commitDetails;
     cp.execSync("git config user.name \"github-actions[bot]\"", {
         cwd: path.resolve("../")
     });
