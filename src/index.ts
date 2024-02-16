@@ -223,7 +223,7 @@ function push2repo() {
     try {
         cp.execSync(`git commit -m "${commitInf}"`);
     } catch (e) {
-        console.error(e.message);
+        console.error(e);
         return;
     }
 
