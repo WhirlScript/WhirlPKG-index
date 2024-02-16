@@ -1,0 +1,23 @@
+# @format
+
+name: "update"
+on:
+    push:
+        branches:
+            - "master"
+    schedule:
+      - cron: 0 0,4,8,12,16,20 * * *
+jobs:
+    runscript:
+        runs-on: ubuntu-latest
+        env:
+            ssh_key: ${{ secrets.SSH_KEY }}
+        steps:
+            - name: "checkout"
+              uses: actions/checkout@v4
+
+            - name: "npm"
+              run: npm i -g typescript @types/node ts-node
+
+            - name: "update"
+              run: npx ts-node ./src/index.ts
