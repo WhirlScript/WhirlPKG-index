@@ -198,7 +198,6 @@ for (let fileName of wrpBucketFileList) {
 
 // commit
 function push2repo() {
-    console.log("Pushing to repo...");
     cp.execSync('git config user.name "github-actions[bot]"');
     cp.execSync(
         'git config user.email "41898282+github-actions[bot]@users.noreply.github.com"'
@@ -218,7 +217,7 @@ function push2repo() {
     for (let failedPackageNotice of noticeList.failed) {
         commitInf += failedPackageNotice + "\n";
     }
-    console.log(commitInf);
+    //console.log(commitInf);
     if (commitInf === "Update packages.\n") return;
     try {
         cp.execSync(`git commit -m "${commitInf}"`);
@@ -227,12 +226,13 @@ function push2repo() {
         return;
     }
 
-    console.log(commitInf);
+    //console.log(commitInf);
     cp.execSync(`mkdir -p ~/.ssh/`);
     cp.execSync(`touch ~/.ssh/id_rsa.pub`);
     cp.execSync(`echo ${process.env["ssh_key"]} > ~/.ssh/id_rsa.pub`);
     console.log("Gen ssh pub key");
-    console.log(process.env["ssh_key"]);
+    console.log(process.env["ssh_key"])
+    console.log("Pushing to repo...");;
     cp.execSync(`git push`);
 }
 
@@ -242,8 +242,8 @@ const runTask = setInterval(() => {
         status.updatePac.todo <= status.updatePac.finished
     ) {
         push2repo();
-        console.log("Pushed！");
-        console.log(status);
+        console.log("Task finished！");
+        //console.log(status);
         clearInterval(runTask);
     }
     console.log(status);
