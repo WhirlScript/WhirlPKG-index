@@ -52,7 +52,7 @@ for (let file in wrsPackageList) {
 
 for (let file in wrsPackageList) {
     if (fs.existsSync(`./bucket/${file}.json`)) continue;
-    console.log(`新包: ${file}`);
+    console.log(`New package: ${file}`);
     const wrsPackName: string = file;
     const wrsPackageRepoURL: string = wrsPackageList[file];
     const wrsPackageGithubPath: string = wrsPackageRepoURL.split(githubURL)[1];
@@ -124,12 +124,11 @@ for (let fileName of wrpBucketFileList) {
     // 判断文件上的包名与内部标记的包名是否一致：
     if (wrsPackageNameInFileName !== wrsPackageNameInJson) {
         console.warn(
-            `储存时文件(${fileName})的包名(${wrsPackageNameInFileName})与内部储存的包名(${wrsPackageNameInJson})不一致！
-请手动干预。阿巴阿巴。`
+            `Package name (${wrsPackageNameInFileName}) != package name defined in ${fileName}(${wrsPackageNameInJson})!`
         );
-        noticeList.failed
-            .push(`储存时文件(${fileName})的包名(${wrsPackageNameInFileName})与内部储存的包名(${wrsPackageNameInJson})不一致！
-        请手动干预。`);
+        noticeList.failed.push(
+            `Package name (${wrsPackageNameInFileName}) != package name defined in ${fileName}(${wrsPackageNameInJson})!`
+        );
         continue;
     }
 
@@ -137,7 +136,9 @@ for (let fileName of wrpBucketFileList) {
     const wrsPackageGithubPath: string = wrsPackageRepoURL.split(githubURL)[1];
     const wrsPackageVersion: string =
         wrsPackageInfo.versions[wrsPackageInfo.versions.length - 1].version;
-    console.log(`检测更新「${wrsPackageNameInJson}」(${wrsPackageVersion})...`);
+    console.log(
+        `Checking update for wrs package ${wrsPackageNameInJson}(${wrsPackageVersion})...`
+    );
     const requestOption: any = {
         hostname: "api.github.com",
         path: `/repos/${wrsPackageGithubPath}/git/refs/tags/`,
@@ -162,11 +163,11 @@ for (let fileName of wrpBucketFileList) {
 
             // 如果版本号相同，那么不需要继续处理了，直接返回即可。
             if (wrsPackageVersion === latestVersion) {
-                console.log("无需更新。");
+                console.log("Update skip。");
                 status.updatePac.finished += 1;
                 return;
             }
-            console.log(`正在更新「${wrsPackageNameInJson}」...`);
+            console.log(`Updating ${wrsPackageNameInJson}...`);
             // 获取目标仓库中whirlpool.json的raw:
             fetch(
                 `${githubURL}${wrsPackageGithubPath}/raw/${latestVersionSha}/whirlpool.json`
@@ -187,7 +188,7 @@ for (let fileName of wrpBucketFileList) {
 
                     fs.writeFileSync(filePath, JSON.stringify(writeData));
                     console.log(
-                        `已更新${fileName}(${wrsPackageVersion})为版本${reqData.version}`
+                        `Updated wrs package${fileName}(${wrsPackageVersion}) to version ${reqData.version}`
                     );
                     noticeList.update.push(
                         `${fileName}(${wrsPackageVersion}) ${reqData.version}`
@@ -199,15 +200,15 @@ for (let fileName of wrpBucketFileList) {
 
 // 提交
 function push2repo() {
-    console.log("正在push...");
+    console.log("Pushing to repo...");
     cp.execSync('git config user.name "github-actions[bot]"');
-    console.log("设置git用户名");
+    //console.log("设置git用户名");
     cp.execSync(
         'git config user.email "41898282+github-actions[bot]@users.noreply.github.com"'
     );
-    console.log("设置git邮箱");
+    //console.log("设置git邮箱");
     cp.execSync("git add .");
-    console.log("git添加./到暂存区");
+    //console.log("git添加./到暂存区");
     let commitInf = "Update packages.\n";
     for (let newPackageNotice of noticeList.new) {
         commitInf += newPackageNotice + "\n";
@@ -224,10 +225,10 @@ function push2repo() {
     }
     try {
         cp.execSync(`git commit -m "${commitInf}"`);
-        console.log("git提交更改");
+        //console.log("git提交更改");
     } catch (e) {
         console.error(e);
-        console.log("无需提交。");
+        //console.log("无需提交。");
         return;
     }
 
@@ -235,10 +236,10 @@ function push2repo() {
     cp.execSync(`mkdir -p ~/.ssh/`);
     cp.execSync(`touch ~/.ssh/id_rsa.pub`);
     cp.execSync(`echo ${process.env["ssh_key"]} > ~/.ssh/id_rsa.pub`);
-    console.log("写入ssh pub key");
+    console.log("Gen ssh pub key");
     console.log(process.env["ssh_key"]);
     cp.execSync(`git push`);
-    console.log("git推送更改...");
+    //console.log("git推送更改...");
 }
 
 const runTask = setInterval(() => {
@@ -247,7 +248,7 @@ const runTask = setInterval(() => {
         status.updatePac.todo <= status.updatePac.finished
     ) {
         push2repo();
-        console.log("任务完成！");
+        console.log("Pushed！");
         console.log(status);
         clearInterval(runTask);
     }
