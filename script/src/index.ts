@@ -102,9 +102,9 @@ let commitDetails = "";
                 }
 
                 packageInf.versions.push({
+                    version: tag.version,
                     dependencies: whirlpkg.dependencies ?? {},
-                    sha: tag.sha,
-                    version: tag.version
+                    sha: tag.sha
                 });
 
                 console.log(`${messageHead} add ${tag.version}`);
