@@ -136,7 +136,7 @@ let commitDetails = "";
     }
 
     // commit
-    const commitInf = "Update packages.\n\n" + commitDetails;
+    const commitInf = "Update packages\n\n" + commitDetails;
     cp.execSync("git config user.name \"github-actions[bot]\"", {
         cwd: path.resolve("../")
     });

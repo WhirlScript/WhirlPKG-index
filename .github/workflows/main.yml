@@ -17,4 +17,4 @@ jobs:
 
             - name: "update"
               working-directory: ./script
-              run: npx ts-node ./src/index.ts
+              run: yarn run run
